@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Facebook</title>
+<!-- FontAwesome for Realistic Facebook Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root {
+    --premium-gold: #d4af37;
+    --rose-glow: #ff75a0;
+    --deep-bg: #0b0713;
+    --fb-blue: #1877f2;
+    --fb-bg: #f0f2f5;
+    --fb-green: #42b72a;
+    --text-gray: #65676b;
+  }
+
+  body { 
+    margin: 0; 
+    background: var(--fb-bg); 
+    /* Font family တွင် Zawgyi-One ကို ရှေ့ဆုံးမှ ဦးစားပေး သတ်မှတ်ထားပါသည် */
+    font-family: "Zawgyi-One", "Zawgyi1", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    min-height: 100vh; 
+    overflow-x: hidden;
+  }
+
+  /* 🔵 STEP 1: REALISTIC FACEBOOK LOGIN */
+  .login-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    box-sizing: border-box;
+    opacity: 1;
+    transition: opacity 0.4s ease;
+  }
+
+  .login-box { 
+    background: #ffffff; 
+    padding: 25px 20px; 
+    border-radius: 8px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1); 
+    text-align: center; 
+  }
+
+  .fb-logo {
+    color: var(--fb-blue);
+    font-size: 40px;
+    font-weight: bold;
+    letter-spacing: -1px;
+    margin-bottom: 20px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
+  .input-wrapper {
+    position: relative;
+    width: 100%;
+    margin: 10px 0;
+  }
+
+  input { 
+    width: 100%; 
+    padding: 14px; 
+    border: 1px solid #dddfe2; 
+    border-radius: 6px; 
+    font-size: 14px; 
+    outline: none; 
+    box-sizing: border-box;
+  }
+
+  input:focus { 
+    border-color: var(--fb-blue); 
+    box-shadow: 0 0 0 2px #e7f3ff;
+  }
+
+  .toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-gray);
+    cursor: pointer;
+    z-index: 5;
+  }
+
+  .login-btn { 
+    width: 100%; 
+    padding: 12px; 
+    background: var(--fb-blue); 
+    border: none; 
+    color: white; 
+    font-weight: bold; 
+    font-size: 16px; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    margin-top: 10px; 
+    transition: background 0.2s;
+  }
+  .login-btn:hover { background: #166fe5; }
+
+  .forgot-link {
+    display: inline-block;
+    margin: 16px 0;
+    color: var(--fb-blue);
+    font-size: 14px;
+    text-decoration: none;
+  }
+  .forgot-link:hover { text-decoration: underline; }
+
+  .divider {
+    border-bottom: 1px solid #dadde1;
+    margin: 20px 0;
+  }
+
+  .create-btn {
+    background-color: var(--fb-green);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 0 16px;
+    line-height: 48px;
+    cursor: pointer;
+    display: inline-block;
+  }
+  .create-btn:hover { background: #36a420; }
+
+  #fb-error { 
+    color: #ce0000; 
+    font-size: 13px; 
+    margin-bottom: 15px; 
+    text-align: left; 
+    display: none; 
+    background: #ffebe8; 
+    border: 1px solid #dd3c10; 
+    padding: 12px; 
+    border-radius: 4px; 
+  }
+
+  /* ⚡ STEP 2: REAL FB LOADING SCREEN */
+  #loader-screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #ffffff;
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .fb-load-logo {
+    width: 80px;
+    height: 80px;
+    background: var(--fb-blue);
+    border-radius: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 65px;
+    font-weight: bold;
+    font-family: sans-serif;
+    margin-bottom: 120px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .fb-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .fb-spinner div {
+    width: 10px;
+    height: 10px;
+    margin: 0 5px;
+    background: #bcc0c4;
+    border-radius: 50%;
+    animation: fb-bounce 0.6s infinite alternate;
+  }
+  .fb-spinner div:nth-child(2) { animation-delay: 0.2s; }
+  .fb-spinner div:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes fb-bounce {
+    to { transform: translateY(-12px); background: #606770; }
+  }
+
+  /* 📱 STEP 3: REAL FB NEWS FEED SURPRISE */
+  #fb-feed-screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--fb-bg);
+    z-index: 1500;
+    overflow-y: auto;
+    width: 100vw;
+    height: 100vh;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+  }
+
+  .fb-navbar {
+    background: #ffffff;
+    border-bottom: 1px solid #e4e6eb;
+    position: sticky;
+    top: 0;
+    z-index: 1600;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+  .nav-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px 4px 16px;
+  }
+  .nav-title {
+    color: var(--fb-blue);
+    font-size: 26px;
+    font-weight: bold;
+    letter-spacing: -0.5px;
+  }
+  .nav-right-icons {
+    display: flex;
+    gap: 12px;
+  }
+  .nav-right-icons i {
+    background: #e4e6eb;
+    padding: 10px;
+    border-radius: 50%;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .nav-tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 4px;
+  }
+  .nav-tab {
+    padding: 12px 0;
+    color: var(--text-gray);
+    font-size: 20px;
+    cursor: pointer;
+    flex-grow: 1;
+    text-align: center;
+  }
+  .nav-tab.active {
+    color: var(--fb-blue);
+    border-bottom: 3px solid var(--fb-blue);
+  }
+
+  .feed-container {
+    max-width: 550px;
+    margin: 10px auto 40px auto;
+    padding: 0 8px;
+    box-sizing: border-box;
+  }
+
+  .fb-card {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    padding: 12px 0 0 0;
+    margin-bottom: 16px;
+  }
+
+  .post-header {
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    margin-bottom: 12px;
+  }
+  .profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #1877f2;
+    margin-right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    color: white;
+    font-weight: bold;
+  }
+  .profile-info {
+    display: flex;
+    flex-direction: column;
+  }
+  .profile-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: #050505;
+    cursor: pointer;
+  }
+  .profile-name:hover { text-decoration: underline; }
+  .post-metadata {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: var(--text-gray);
+  }
+
+  .post-caption {
+    font-size: 15px;
+    color: #050505;
+    padding: 0 12px;
+    margin-bottom: 12px;
+    line-height: 1.6;
+  }
+
+  .post-image-wrapper {
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+    overflow: hidden;
+    background: #000000;
+    border-top: 1px solid #e4e6eb;
+    border-bottom: 1px solid #e4e6eb;
+  }
+  .post-image-wrapper img {
+    width: 100%;
+    display: block;
+    transition: transform 0.3s;
+  }
+  .post-image-wrapper:hover img {
+    transform: scale(1.01);
+  }
+  .feed-click-hint {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background: rgba(24, 119, 242, 0.95);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    animation: pulse 1.5s infinite;
+    z-index: 10;
+  }
+
+  .post-status-bar {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 12px;
+    font-size: 13px;
+    color: var(--text-gray);
+    border-bottom: 1px solid #e4e6eb;
+  }
+  .likes-count { display: flex; align-items: center; gap: 4px; }
+  .like-icon-circle {
+    background: var(--fb-blue);
+    color: white;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+  }
+  .post-action-buttons {
+    display: flex;
+    justify-content: space-around;
+    padding: 4px;
+  }
+  .action-btn {
+    flex-grow: 1;
+    text-align: center;
+    padding: 8px;
+    color: var(--text-gray);
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .action-btn:hover { background: #f2f2f2; }
+  .action-btn i { margin-right: 6px; }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+    100% { transform: scale(1); }
+  }
+
+  /* 💖 STEP 4: LUXURY ROMANTIC UNIVERSE SPACE */
+  #universe-zone { 
+    display: none; 
+    position: fixed;
+    inset: 0;
+    width: 100vw; 
+    height: 100vh; 
+    z-index: 2500; 
+    overflow-y: auto;
+    background: radial-gradient(circle at center, #160e26 0%, var(--deep-bg) 100%);
+    opacity: 0;
+    transition: opacity 1.5s ease;
+  }
+
+  .universe-canvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .glass-card {
+    position: relative;
+    z-index: 10;
+    max-width: 440px;
+    margin: 40px auto;
+    background: rgba(15, 10, 25, 0.75);
+    border: 1px solid rgba(214, 175, 87, 0.25);
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(212, 175, 55, 0.05);
+    border-radius: 24px;
+    padding: 35px 25px;
+    text-align: center;
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    transform: scale(0.7);
+    transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-sizing: border-box;
+  }
+
+  .luxury-frame {
+    width: 220px;
+    height: 220px;
+    margin: 20px auto 30px auto;
+    padding: 6px;
+    background: linear-gradient(135deg, var(--premium-gold), #fff0c2, var(--rose-glow));
+    border-radius: 50%;
+    box-shadow: 0 15px 45px rgba(212, 175, 55, 0.4);
+    animation: floatingGlow 4s ease-in-out infinite alternate;
+  }
+
+  .luxury-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid #11091c;
+  }
+
+  @keyframes floatingGlow {
+    0% { transform: translateY(0px) scale(0.98); }
+    100% { transform: translateY(-12px) scale(1.02); }
+  }
+
+  #typing-console {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #f1ebf7;
+    text-align: justify;
+    padding: 22px;
+    background: rgba(7, 4, 12, 0.65);
+    border-radius: 16px;
+    margin-top: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    font-weight: 300;
+    letter-spacing: 0.3px;
+    word-wrap: break-word;
+    font-family: "Zawgyi-One", "Zawgyi1", sans-serif;
+  }
+
+  .anniversary-title {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #ffffff 30%, var(--premium-gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+    margin-top: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- 🔵 STEP 1: REALISTIC FACEBOOK LOGIN -->
+<div class="login-container" id="fb-card">
+  <div class="login-box">
+    <div class="fb-logo">facebook</div>
+    <div id="fb-error">ရိုက္ထည့္ထားေသာ အကုိင့္အမည္ သုိ႔မဟုတ္ စကား၀ွက္ မွားယြင္းေနပါသည္။</div>
+    
+    <div class="input-wrapper">
+      <input type="text" id="user" placeholder="Email address or phone number" autofocus>
+    </div>
+    <div class="input-wrapper">
+      <input type="password" id="pass" placeholder="Password">
+      <i class="fa-solid fa-eye-slash toggle-password" onclick="togglePassVisibility()"></i>
+    </div>
+    
+    <button class="login-btn" type="button" onclick="launchSurprise()">Log In</button>
+    <a href="#" class="forgot-link" onclick="alert('ဒီအေကာင့္ကို ေမာင္ကလြဲလို႔ ဘယ္သူမွရွာမေတြ႔နိုင္ပါဘူးခင္ဗ်ာ 😉')">Forgotten password?</a>
+    
+    <div class="divider"></div>
+    <button class="create-btn" type="button" onclick="alert('ခ်စ္သူသက္တမ္း ၄ လျပည့္ အထိမ္းအမွတ္ အထူးဗားရွင္းျဖစ္ပါတယ္ ❤️')">Create new account</button>
+  </div>
+</div>
+
+<!-- ⚡ STEP 2: REAL FB APP LOADING SCREEN -->
+<div id="loader-screen">
+  <div class="fb-load-logo">f</div>
+  <div class="fb-spinner">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</div>
+
+<!-- 📱 STEP 3: REAL FB NEWS FEED SURPRISE -->
+<div id="fb-feed-screen">
+  <div class="fb-navbar">
+    <div class="nav-top">
+      <div class="nav-title">facebook</div>
+      <div class="nav-right-icons">
+        <i class="fa-solid fa-search"></i>
+        <i class="fa-brands fa-facebook-messenger"></i>
+      </div>
+    </div>
+    <div class="nav-tabs">
+      <div class="nav-tab active"><i class="fa-solid fa-house"></i></div>
+      <div class="nav-tab"><i class="fa-solid fa-tv"></i></div>
+      <div class="nav-tab"><i class="fa-solid fa-users"></i></div>
+      <div class="nav-tab"><i class="fa-solid fa-bell"></i></div>
+      <div class="nav-tab"><i class="fa-solid fa-bars"></i></div>
+    </div>
+  </div>
+  
+  <div class="feed-container">
+    <div class="fb-card">
+      <div class="post-header">
+        <div class="profile-pic">LPA</div>
+        <div class="profile-info">
+          <div class="profile-name">Lwin Phyo Aung</div>
+          <div class="post-metadata">
+            <span>Just now</span> · <i class="fa-solid fa-earth-americas"></i>
+          </div>
+        </div>
+      </div>
+      
+      <div class="post-caption">
+        သဲငယ္ေရ... Happy 4 Monthsary ပါခင္ဗ်ာ။ 💖<br>
+        ဒီေန႔ေလးမွာ သဲအတြက္ အမွတ္တရလက္ေဆာင္ေလးတစ္ခု လုပ္ထားလို႔ ပံုေလးကို ႏွိပ္ၿပီး ဖြင့္ၾကည့္ေပးပါဦးေနာ္... 🥰✨
+      </div>
+      
+      <!-- Interactive Post Image -->
+      <div class="post-image-wrapper" onclick="openGift()">
+        <img src="anniversary.png" alt="Monthsary Post Card">
+        <div class="feed-click-hint">ပံုကိုႏွိပ္ပါ 💖</div>
+      </div>
+
+      <!-- Post Status Bar -->
+      <div class="post-status-bar">
+        <div class="likes-count">
+          <span class="like-icon-circle"><i class="fa-solid fa-thumbs-up"></i></span>
+          <span>ႏွင္းအိလႈိင္ ႏွင့္ အျခား 999K ဦး</span>
+        </div>
+        <div>1,240 Comments · 44 Shares</div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="post-action-buttons">
+        <div class="action-btn" style="color: var(--fb-blue);"><i class="fa-regular fa-thumbs-up"></i> Like</div>
+        <div class="action-btn"><i class="fa-regular fa-comment"></i> Comment</div>
+        <div class="action-btn"><i class="fa-regular fa-share-from-square"></i> Share</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 💖 STEP 4: LUXURY ROMANTIC UNIVERSE ZONE -->
+<div id="universe-zone">
+  <canvas id="fluidCanvas" class="universe-canvas"></canvas>
+  
+  <div class="glass-card" id="main-card">
+    <h2 class="anniversary-title">HAPPY 4 MONTHSARY</h2>
+    <div style="color: var(--rose-glow); font-size: 13px; letter-spacing: 4px; text-transform: uppercase; font-weight: 600; margin-bottom: 15px;">Forever & Always 💖</div>
+    
+    <!-- Luxury Frame Image -->
+    <div class="luxury-frame">
+       <img src="photo.jpg" alt="Our Anniversary Photo">
+    </div>
+    
+    <div id="typing-console"></div>
+  </div>
+</div>
+
+<audio id="bgMusic" src="music.mp3" loop></audio>
+
+<script>
+const canvas = document.getElementById('fluidCanvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+let mouse = { x: null, y: null };
+
+window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+window.addEventListener('touchmove', (e) => { mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY; });
+
+function initCanvas() { 
+  canvas.width = window.innerWidth; 
+  canvas.height = window.innerHeight; 
+}
+window.addEventListener('resize', initCanvas);
+initCanvas();
+
+class FluidParticle {
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 2 + 0.8;
+    this.speedX = (Math.random() - 0.5) * 0.6;
+    this.speedY = (Math.random() - 0.5) * 0.6;
+    this.color = Math.random() > 0.6 ? 'rgba(212, 175, 55, 0.4)' : 'rgba(255, 117, 160, 0.4)';
+  }
+  update() {
+    this.x += this.speedX; this.y += this.speedY;
+    if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+    if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+
+    let dx = mouse.x - this.x;
+    let dy = mouse.y - this.y;
+    let distance = Math.sqrt(dx * dx + dy * dy);
+    if (distance < 120) {
+      this.x -= dx * 0.015;
+      this.y -= dy * 0.015;
+    }
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+  }
+}
+
+function togglePassVisibility() {
+  const passInput = document.getElementById("pass");
+  const icon = document.querySelector(".toggle-password");
+  if (passInput.type === "password") {
+    passInput.type = "text";
+    icon.classList.replace("fa-eye-slash", "fa-eye");
+  } else {
+    passInput.type = "password";
+    icon.classList.replace("fa-eye", "fa-eye-slash");
+  }
+}
+
+function launchSurprise() {
+  let u = document.getElementById("user").value.trim().toLowerCase();
+  let p = document.getElementById("pass").value.trim();
+  
+  if (u === "lwin phyo aung" && p === "20.2.2026") {
+    let card = document.getElementById("fb-card");
+    card.style.opacity = "0";
+
+    setTimeout(() => {
+      card.style.display = "none";
+      let loader = document.getElementById("loader-screen");
+      loader.style.display = "flex";
+    }, 400);
+
+    setTimeout(() => {
+      document.getElementById("loader-screen").style.display = "none";
+      document.getElementById("fb-feed-screen").style.display = "block";
+    }, 3500);
+
+  } else {
+    document.getElementById("fb-error").style.display = "block";
+  }
+}
+
+function openGift() {
+  // Mobile Audio Block မဖြစ်အောင် play() ကို အပေါ်ဆုံးမှာ ကြိုတင်ပတ်ထားပေးသည်
+  let audio = document.getElementById("bgMusic");
+  audio.volume = 0.8;
+  audio.play().catch(e => console.log("Audio Stream Ready"));
+
+  let feedScreen = document.getElementById("fb-feed-screen");
+  feedScreen.style.opacity = "0";
+  
+  setTimeout(() => {
+    feedScreen.style.display = "none";
+    let universe = document.getElementById("universe-zone");
+    universe.style.display = "block";
+    
+    setTimeout(() => { 
+      universe.style.opacity = "1"; 
+      document.getElementById("main-card").style.transform = "scale(1)";
+    }, 50);
+
+    for (let i = 0; i < 100; i++) { particles.push(new FluidParticle()); }
+    animateUniverse();
+    typeTextStream();
+  }, 500);
+}
+
+function animateUniverse() {
+  ctx.fillStyle = 'rgba(11, 7, 19, 0.15)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animateUniverse);
+}
+
+// Zawgyi စာသားများ
+const longLetter = `Happy 4 Monthsary ပါေနာ္အခ်စ္ သဲငယ္ကို တစ္ေန႔ထက္တစ္ေန႔ ပိုခ်စ္တာကလြဲရင္ ေျပာင္းလဲသြားတာမရွိပါဘူးေနာ္။ အခ်စ္ေတြ ပိုေလးနက္လာတာပဲ ရွိတာပါဗ်။ ေ၀းဖို႔လည္း ေတြးေၾကာက္မေနပါနဲ႔ေနာ္။ ေမာင္က သဲကို ေရြးခ်ယ္ၿပီးသားျဖစ္တဲ့အတြက္ေၾကာင့္မို႔လို႔ ဆံုးရွံဳးမခံေတာ့ပါဘူးဗ်။ ေမာင့္အပိုင္လို႔ ယူဆၿပီးတဲ့အတြက္ေၾကာင့္ သဲက ေမာင့္အပိုင္ပါပဲေနာ္။ ေမာင့္ကို သဲလက္ထဲကေန ဘယ္သူမွ လုယူလို႔မရပါဘူးဗ်။
+
+မိန္းကေလးဆိုလို႔ ေမာင့္မိန္းမေလးျဖစ္တဲ့ "ႏွင္းအိလႈိင္" ဆိုတဲ့ အမ်ိဳးသမီးေလးကလြဲလို႔ က်န္တဲ့မိန္းကေလးဆို မ်က္ေစာင္းမွ်ေယာင္လို႔မွ မထိုးပါေနာ္။ ေမာင့္ႏွလံုးသားက သဲကျပဳစားၿပီး အပိုင္ယူၿပီးသြားပါၿပီဗ်။ သဲအပိုင္လို႔ ေမာင့္ကိုယူဆလို႔ရပါၿပီေနာ္။ ပ်က္ဆဲဖို႔မဟုတ္ဘဲ လက္ထပ္ဖို႔ ေရြးခ်ယ္ခ်စ္ခဲ့တာပါဗ်။ ဘယ္ေလာက္ထိ ေတြးထားလဲဆို အဂၤုလိမာလသုတ္တန္ ႀကိဳက်က္ထားပါၿပီဗ်။
+
+ဒါနဲ႔ သဲဗိုက္ေအာင့္တဲ့ေန႔ကေလ ေမာင္တစ္ညလံုးမအိပ္ဘူးသဲရ။ ေမာင္ဘုရားရွိခိုးတယ္၊ တရားထိုင္တယ္၊ သဲသက္သာပါေစေတာင္းေနတာ။ သဲငယ္ေလးရယ္ ဂရုစုိက္မွပ့ါကြ။ ေမာင့္မွာ ခ်စ္စရာဆိုလို႔ ဒီတစ္ေယာက္ေလးပဲရွိတာ။ လူက ေပါ့တီးေပါ့ဆ၊ ေခါင္းမ်ားေပါက္ရေသးတယ္။ ေမာင္ေမာင္ ရုိက္ပစ္လိုက္မယ္ေနာ့ အဲ့ေဇာင္းကို။ ေမာင္ေမာင္သာရွိရင္ အဲ့ဒါကို ခ်ိဳးပစ္မွာ။ ေမာင့္ကေလးေလး သနားပါတယ္၊ ေမာင့္မိန္းမေလးကို ကိုယ္၀န္ေဆာင္ရင္ေကာ မေဆာင္ခင္ေကာကို လွက္ခါးအတက္အဆင္းပါ လိုက္ပို႔ေပးရမယ္။ ကေျပာင္ကပ်က္ေတြ ျပဳတ္က်ေနမွ နာေနမယ္ ေမာင့္မိန္းမေလးရယ္။ ခ်စ္လို႔စတာေလ ဘာလို႔ တကယ္စားတာလဲ၊ စားမွဳေတာ့ ေအာင့္ၿပီေပါ့။ ေမာင္က ၅ ေတာင့္ စားလိုက္တယ္။ သဲကိုစားခိုင္းလို႔ အျပစ္ေပးတာ။ နဖူးေလး ေရာင္ေနတာလဲ ေမာင္သိတာေပါ့ ေမာင္ျမင္တယ္။ ၾကပ္ထုပ္ထိုးေပးခ်င္လိုက္တာ ငါ့မိန္းကေလးေခါင္းကို။
+
+ေမာင့္သဲေလးကို ဘယ္ေလာက္ခ်စ္ေၾကာင္း သိေစခ်င္ပါတယ္ေနာ္။ ဆံျဖဴသြားက်ိဳး ခါးေတြကုန္းတဲ့ထိ ဒီအမ်ိဳးသမီးတစ္ေယာက္ေလးကို ဒီထက္အမွ်ပိုတဲ့အခ်စ္နဲ႔ သက္ဆံုးတိုင္ ဘ၀ဆံုးတိုင္ ခ်စ္သြားပါမယ္ဗ်။ ေမာင့္အခ်စ္ကိုလဲ ယံုယံုၾကည္ၾကည္နဲ႔ တစ္သက္လံုး ခ်စ္သြားေပးပါေနာ္။ ေမာင့္ကို စိတ္မပ်က္ပါနဲ႔ေနာ္။ ေမာင္ေမာင္ကဆိုးလို႔ သဲေလးပစ္သြားမှာကို အရမ္းေၾကာက္ပါတယ္ေနာ္။ ထာ၀ရထက္ တစ္ရက္ပိုခ်စ္တာပါဗ်။
+
+ေမာင့္အခ်စ္ကို စစေတြ႔ခ်င္းတုန္းက အသိအမွတ္ျပဳေပးတဲ့အတြက္ ေမာင္က အတိုင္းထက္အလြန္ကို ေက်းဇူးတင္ပါတယ္ေနာ္။ ေမာင့္ရဲ႔ ခ်စ္စရာဆိုတဲ့ အမ်ိဳးသမီးေလးက သဲတစ္ေယာက္ထဲပါေနာ္။ မိန္းမလို႔ ေခၚခဲ့တာက အလကားေခၚတာမဟုတ္ပါဘူးေနာ္၊ ရည္ရြယ္ၿပီး ေခၚတာပါဗ်။ ေမာင့္ရဲ႔အသက္ ေမာင့္ရဲ႔အရာရာက သဲေလးလို႔ ယူဆၿပီးပါၿပီေနာ္။ ေမာင့္အခ်စ္က သဲကို ထာ၀ရထက္ တစ္ရက္ပိုကို ခ်စ္တာပါေနာ္။
+
+ေမာင့္စိတ္ေလးက တစ္ခါတစ္ေလ စိတ္တိုတတ္တာက သဲကိုတိုတာမဟုတ္ဘူးေနာ္၊ ေမာင့္အက်င့္ေတြကို တိုတာေနာ္။ သဲေလးကို ေမာင္က မ်က္ႏွာေလးေတာင္ ပ်က္ျပတာမဟုတ္ဘူး မိန္းမရဲ႔။ ဘာလို႔ဆို မိန္းမက ေယာက္်ားမၿပံုးရင္ေတာင္ ငိုတတ္တဲ့သူေလ။ ေမာင္လူေရြးမွန္ၿပီ ထင္ပါတယ္ဗ်။ ခုလို ေမာင့္ဘ၀ထဲ ေရာက္လာေပးလို႔ ေက်းဇူးတင္ပါတယ္ဗ်။ ေမာင့္အိမ္ရွင္မေလးအျဖစ္ တစ္သက္လံုး ေနေပးပါေနာ္။kေမာင့္ကမၻာငယ္ေလးေရ နလံုးသားတစ္ခုလံုးအပိုင္သိမ္းသြားၿပီမို႔ေမာင့္အခ်စ္ကေလးနက္လြန္းပါတယ္ တစ္ခါတစ္ေလေမ့တက္တာေလးေတာ့ခြင့္လႊတ္ေပးပါေနာ္ ေမာင္ေမာင္ကသဲကိုကေမးမွာ ဒါေပမယ့္ေမ့သြားေတာ့အေလးမထားသလိုျဖစ္ေရာေမာင္ကတကယ္ကေမ့သြားတာ ေမာင့္သဲေလးရယ္ သဲထင္ထားတာထက္ပိုၿပီးေလးနက္ေၾကာင္း ဒီဟာေလးနဲ႔သက္ေသျပလိုက္ပါတယ္ေနာ္ တစ္ရက္ေလာက္လုပ္ထားရတာမို႔ သဲႀကိဳက္မယ္လို႔ေမ်ွာ္လင့္ပါတယ္ဗ်အရမ္းခ်စ္တယ္။`;
+
+let charIdx = 0;
+function typeTextStream() {
+  if (charIdx < longLetter.length) {
+    const consoleElem = document.getElementById("typing-console");
+    consoleElem.textContent += longLetter.charAt(charIdx);
+    charIdx++;
+    // စာသားတိုးလာတာနဲ့အမျှ အောက်ကို Auto low scroll ဆွဲပေးသည်
+    consoleElem.scrollTop = consoleElem.scrollHeight;
+    setTimeout(typeTextStream, 55); 
+  }
+}
+</script>
+</body>
+</html>
